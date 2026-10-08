@@ -77,15 +77,25 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1" },
+    { title: "Husainraza Merchant | Freelance Web Developer" },
+    {
+      name: "description",
+      content:
+        "Husainraza Merchant builds fast, modern, responsive websites, landing pages and web applications using React, Tailwind CSS, JavaScript and Supabase.",
+    },
+    { name: "author", content: "Husainraza Merchant" },
+    {
+      property: "og:title",
+      content: "Husainraza Merchant | Freelance Web Developer",
+    },
+    {
+      property: "og:description",
+      content:
+        "Fast, modern websites built for the future. Explore web development services, skills and projects by Husainraza Merchant.",
+    },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       {
