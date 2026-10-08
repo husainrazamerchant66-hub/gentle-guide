@@ -183,6 +183,60 @@ const gradients = [
 ];
 const accents = ["bg-violet-400", "bg-cyan-400", "bg-fuchsia-400"];
 
+const country_codes: { code: string; flag: string; label: string }[] = [
+  { code: "+91", flag: "🇮🇳", label: "India" },
+  { code: "+1", flag: "🇺🇸", label: "USA / Canada" },
+  { code: "+44", flag: "🇬🇧", label: "United Kingdom" },
+  { code: "+971", flag: "🇦🇪", label: "UAE" },
+  { code: "+966", flag: "🇸🇦", label: "Saudi Arabia" },
+  { code: "+974", flag: "🇶🇦", label: "Qatar" },
+  { code: "+965", flag: "🇰🇼", label: "Kuwait" },
+  { code: "+968", flag: "🇴🇲", label: "Oman" },
+  { code: "+973", flag: "🇧🇭", label: "Bahrain" },
+  { code: "+92", flag: "🇵🇰", label: "Pakistan" },
+  { code: "+880", flag: "🇧🇩", label: "Bangladesh" },
+  { code: "+94", flag: "🇱🇰", label: "Sri Lanka" },
+  { code: "+977", flag: "🇳🇵", label: "Nepal" },
+  { code: "+60", flag: "🇲🇾", label: "Malaysia" },
+  { code: "+65", flag: "🇸🇬", label: "Singapore" },
+  { code: "+62", flag: "🇮🇩", label: "Indonesia" },
+  { code: "+63", flag: "🇵🇭", label: "Philippines" },
+  { code: "+66", flag: "🇹🇭", label: "Thailand" },
+  { code: "+84", flag: "🇻🇳", label: "Vietnam" },
+  { code: "+86", flag: "🇨🇳", label: "China" },
+  { code: "+81", flag: "🇯🇵", label: "Japan" },
+  { code: "+82", flag: "🇰🇷", label: "South Korea" },
+  { code: "+61", flag: "🇦🇺", label: "Australia" },
+  { code: "+64", flag: "🇳🇿", label: "New Zealand" },
+  { code: "+49", flag: "🇩🇪", label: "Germany" },
+  { code: "+33", flag: "🇫🇷", label: "France" },
+  { code: "+34", flag: "🇪🇸", label: "Spain" },
+  { code: "+39", flag: "🇮🇹", label: "Italy" },
+  { code: "+31", flag: "🇳🇱", label: "Netherlands" },
+  { code: "+32", flag: "🇧🇪", label: "Belgium" },
+  { code: "+41", flag: "🇨🇭", label: "Switzerland" },
+  { code: "+43", flag: "🇦🇹", label: "Austria" },
+  { code: "+46", flag: "🇸🇪", label: "Sweden" },
+  { code: "+47", flag: "🇳🇴", label: "Norway" },
+  { code: "+45", flag: "🇩🇰", label: "Denmark" },
+  { code: "+358", flag: "🇫🇮", label: "Finland" },
+  { code: "+351", flag: "🇵🇹", label: "Portugal" },
+  { code: "+353", flag: "🇮🇪", label: "Ireland" },
+  { code: "+48", flag: "🇵🇱", label: "Poland" },
+  { code: "+90", flag: "🇹🇷", label: "Turkey" },
+  { code: "+98", flag: "🇮🇷", label: "Iran" },
+  { code: "+964", flag: "🇮🇶", label: "Iraq" },
+  { code: "+972", flag: "🇮🇱", label: "Israel" },
+  { code: "+20", flag: "🇪🇬", label: "Egypt" },
+  { code: "+27", flag: "🇿🇦", label: "South Africa" },
+  { code: "+234", flag: "🇳🇬", label: "Nigeria" },
+  { code: "+254", flag: "🇰🇪", label: "Kenya" },
+  { code: "+233", flag: "🇬🇭", label: "Ghana" },
+  { code: "+55", flag: "🇧🇷", label: "Brazil" },
+  { code: "+54", flag: "🇦🇷", label: "Argentina" },
+  { code: "+52", flag: "🇲🇽", label: "Mexico" },
+];
+
 function Index() {
   const projects = Route.useLoaderData();
   const send = useServerFn(sendMessage);
@@ -197,9 +251,17 @@ function Index() {
     const form_element = event.currentTarget;
     const form_data = new FormData(form_element);
 
+    const country_code = String(form_data.get("country_code") ?? "").trim();
+    const phone_number = String(form_data.get("phone") ?? "")
+      .replace(/[^\d\s()-]/g, "")
+      .trim();
+    const phone =
+      country_code && phone_number ? `${country_code} ${phone_number}` : "";
+
     const contact_entry = {
       name: String(form_data.get("name") ?? "").trim(),
       email: String(form_data.get("email") ?? "").trim(),
+      phone: phone || undefined,
       project_type: String(form_data.get("project_type") ?? "").trim(),
       message: String(form_data.get("message") ?? "").trim(),
     };
@@ -208,7 +270,8 @@ function Index() {
       !contact_entry.name ||
       !contact_entry.email ||
       !contact_entry.project_type ||
-      !contact_entry.message
+      !contact_entry.message ||
+      (phone_number && phone_number.replace(/\D/g, "").length < 6)
     ) {
       set_form_status("error");
       return;
@@ -867,6 +930,38 @@ function Index() {
 
                   <div>
                     <label
+                      htmlFor="contact_phone"
+                      className="mb-2 block text-sm font-medium text-[#D4D4E2]"
+                    >
+                      Phone <span className="text-[#88889E]">(optional)</span>
+                    </label>
+                    <div className="flex gap-3">
+                      <select
+                        name="country_code"
+                        defaultValue="+91"
+                        aria-label="Country code"
+                        className="w-[135px] shrink-0 cursor-pointer rounded-xl border border-white/[0.1] bg-[#10111B] px-3 py-3.5 text-sm text-white outline-none transition-colors focus:border-violet-400/60 focus:ring-2 focus:ring-violet-500/10"
+                      >
+                        {country_codes.map((c) => (
+                          <option key={c.code} value={c.code}>
+                            {c.flag} {c.code} {c.label}
+                          </option>
+                        ))}
+                      </select>
+                      <input
+                        id="contact_phone"
+                        name="phone"
+                        type="tel"
+                        maxLength={20}
+                        autoComplete="tel-national"
+                        placeholder="98765 43210"
+                        className="w-full rounded-xl border border-white/[0.1] bg-[#10111B] px-4 py-3.5 text-sm text-white outline-none transition-colors placeholder:text-[#696980] focus:border-violet-400/60 focus:ring-2 focus:ring-violet-500/10"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label
                       htmlFor="contact_project"
                       className="mb-2 block text-sm font-medium text-[#D4D4E2]"
                     >
@@ -952,10 +1047,6 @@ function Index() {
                     </div>
                   )}
 
-                  <p className="text-center text-[11px] leading-5 text-[#74748C]">
-                    This demo stores submissions locally until a contact
-                    backend is connected.
-                  </p>
                 </form>
               </div>
             </div>
