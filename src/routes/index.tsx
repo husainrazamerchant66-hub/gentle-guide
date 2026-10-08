@@ -1,5 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { listProjects, sendMessage } from "@/lib/site.functions";
+import { previewImage } from "@/lib/preview";
 import {
   ArrowDown,
   ArrowRight,
@@ -28,6 +31,17 @@ import {
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
+  loader: () => listProjects(),
+  head: () => ({
+    meta: [
+      { title: "Husainraza Merchant | Freelance Web Developer" },
+      { name: "description", content: "Fast, modern websites, landing pages and web apps by Husainraza Merchant." },
+      { property: "og:title", content: "Husainraza Merchant | Freelance Web Developer" },
+      { property: "og:description", content: "Explore web development services, skills and projects by Husainraza Merchant." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
@@ -162,7 +176,16 @@ const process_items = [
   },
 ];
 
+const gradients = [
+  "from-[#262047] via-[#1B2445] to-[#101827]",
+  "from-[#15384B] via-[#17304B] to-[#111827]",
+  "from-[#30204A] via-[#202044] to-[#111827]",
+];
+const accents = ["bg-violet-400", "bg-cyan-400", "bg-fuchsia-400"];
+
 function Index() {
+  const projects = Route.useLoaderData();
+  const send = useServerFn(sendMessage);
   const [menu_open, set_menu_open] = useState(false);
   const [form_status, set_form_status] = useState<
     "idle" | "saved" | "error"
@@ -179,7 +202,6 @@ function Index() {
       email: String(form_data.get("email") ?? "").trim(),
       project_type: String(form_data.get("project_type") ?? "").trim(),
       message: String(form_data.get("message") ?? "").trim(),
-      created_at: new Date().toISOString(),
     };
 
     if (
@@ -192,29 +214,14 @@ function Index() {
       return;
     }
 
-    try {
-      const stored_messages = window.localStorage.getItem(
-        "portfolio_contact_messages",
-      );
-
-      const parsed_messages: unknown = stored_messages
-        ? JSON.parse(stored_messages)
-        : [];
-
-      const previous_messages: unknown[] = Array.isArray(parsed_messages)
-        ? parsed_messages
-        : [];
-
-      window.localStorage.setItem(
-        "portfolio_contact_messages",
-        JSON.stringify([...previous_messages, contact_entry]),
-      );
-
-      set_form_status("saved");
-      form_element.reset();
-    } catch {
-      set_form_status("error");
-    }
+    send({ data: contact_entry })
+      .then((res) => {
+        if (res.ok) {
+          set_form_status("saved");
+          form_element.reset();
+        } else set_form_status("error");
+      })
+      .catch(() => set_form_status("error"));
   }
 
   return (
@@ -609,7 +616,7 @@ function Index() {
                 </h2>
                 <p className="mt-5 max-w-xl text-base leading-8 text-[#9999B0]">
                   A look at the kinds of digital products and experiences I
-                  build. Project previews are placeholders for actual work.
+                  build.
                 </p>
               </div>
               <a
@@ -622,136 +629,32 @@ function Index() {
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {project_items.map((project, index) => (
+              {projects.map((project, index) => (
                 <article
-                  key={project.title}
+                  key={project.id}
                   className="group overflow-hidden rounded-[22px] border border-white/[0.09] bg-[#171822] transition-all duration-300 hover:-translate-y-1 hover:border-violet-400/25"
                 >
-                  <div
-                    className={`relative flex h-60 items-center justify-center overflow-hidden bg-gradient-to-br p-6 ${project.gradient}`}
+                  <a
+                    href={project.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={`relative block h-60 overflow-hidden bg-gradient-to-br ${gradients[index % gradients.length]}`}
                   >
-                    <div className="pointer-events-none absolute -right-12 -top-12 h-52 w-52 rounded-full bg-white/[0.06] blur-[45px]" />
-                    <div className="pointer-events-none absolute -bottom-20 -left-12 h-52 w-52 rounded-full bg-violet-500/10 blur-[50px]" />
-
-                    <div className="relative w-full max-w-[300px] overflow-hidden rounded-xl border border-white/20 bg-[#10121F] shadow-[0_20px_55px_rgba(0,0,0,0.45)] transition-transform duration-500 group-hover:scale-[1.04]">
-                      <div className="flex h-7 items-center gap-1.5 border-b border-white/10 bg-[#1C1E30] px-3">
-                        <span className="h-1.5 w-1.5 rounded-full bg-rose-400/80" />
-                        <span className="h-1.5 w-1.5 rounded-full bg-yellow-400/80" />
-                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/80" />
-                        <span className="ml-auto h-2 w-20 rounded-full bg-white/[0.07]" />
-                      </div>
-
-                      {index === 0 && (
-                        <div className="p-4">
-                          <div className="mb-4 flex items-center justify-between">
-                            <div className="h-2.5 w-16 rounded-full bg-white/70" />
-                            <div className="flex gap-2">
-                              <div className="h-1.5 w-5 rounded-full bg-white/20" />
-                              <div className="h-1.5 w-5 rounded-full bg-white/20" />
-                            </div>
-                          </div>
-                          <div className="flex h-16 items-center justify-between rounded-lg bg-gradient-to-r from-[#6254CF] to-[#8C67CE] p-3">
-                            <div className="space-y-2">
-                              <div className="h-2 w-24 rounded-full bg-white/85" />
-                              <div className="h-1.5 w-16 rounded-full bg-white/40" />
-                            </div>
-                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/15">
-                              <Layers3 size={21} className="text-white/80" />
-                            </div>
-                          </div>
-                          <div className="mt-3 grid grid-cols-3 gap-2">
-                            {[0, 1, 2].map((item) => (
-                              <div
-                                key={item}
-                                className="rounded-md bg-white/[0.05] p-1.5"
-                              >
-                                <div className="flex h-12 items-center justify-center rounded bg-[#353353]">
-                                  <div className="h-7 w-7 rounded-md bg-gradient-to-br from-violet-300/60 to-indigo-500/50" />
-                                </div>
-                                <div className="mt-2 h-1.5 w-10 rounded bg-white/50" />
-                                <div className="mt-1 h-1.5 w-6 rounded bg-white/20" />
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {index === 1 && (
-                        <div className="p-4">
-                          <div className="mb-4 flex items-center justify-between">
-                            <div className="h-2.5 w-14 rounded bg-white/70" />
-                            <div className="h-4 w-12 rounded-full bg-cyan-400/60" />
-                          </div>
-                          <div className="relative flex h-[124px] items-center overflow-hidden rounded-lg bg-gradient-to-br from-[#17445D] to-[#1D7892] p-4">
-                            <div className="relative z-10 max-w-[145px] space-y-2">
-                              <div className="h-2.5 w-28 rounded bg-white/90" />
-                              <div className="h-2.5 w-20 rounded bg-white/80" />
-                              <div className="h-1 w-28 rounded bg-white/30" />
-                              <div className="h-1 w-20 rounded bg-white/30" />
-                              <div className="mt-2 h-5 w-16 rounded bg-cyan-300" />
-                            </div>
-                            <div className="absolute -right-6 -top-5 h-40 w-40 rounded-full border-[18px] border-cyan-300/20" />
-                            <div className="absolute right-4 top-9 h-16 w-16 rotate-12 rounded-xl bg-cyan-200/20" />
-                          </div>
-                          <div className="mt-3 grid grid-cols-3 gap-2">
-                            {[0, 1, 2].map((item) => (
-                              <div
-                                key={item}
-                                className="h-7 rounded-md bg-[#253D50]"
-                              />
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {index === 2 && (
-                        <div className="flex min-h-[180px]">
-                          <div className="flex w-12 flex-col items-center gap-3 border-r border-white/[0.08] bg-[#191B30] py-4">
-                            <div className="h-5 w-5 rounded-md bg-violet-400/80" />
-                            <div className="h-3 w-3 rounded bg-white/20" />
-                            <div className="h-3 w-3 rounded bg-white/20" />
-                            <div className="h-3 w-3 rounded bg-white/20" />
-                          </div>
-                          <div className="min-w-0 flex-1 p-3">
-                            <div className="mb-3 flex justify-between">
-                              <div className="h-2.5 w-20 rounded bg-white/70" />
-                              <div className="h-4 w-4 rounded-full bg-violet-400/50" />
-                            </div>
-                            <div className="grid grid-cols-3 gap-2">
-                              {[0, 1, 2].map((item) => (
-                                <div
-                                  key={item}
-                                  className="rounded-md bg-white/[0.06] p-2"
-                                >
-                                  <div className="h-1.5 w-7 rounded bg-white/25" />
-                                  <div className="mt-2 h-3 w-9 rounded bg-violet-300/80" />
-                                </div>
-                              ))}
-                            </div>
-                            <div className="mt-3 flex h-16 items-end justify-around rounded-lg bg-white/[0.04] px-3 pb-2">
-                              {[23, 38, 29, 47, 35, 53, 42, 58].map(
-                                (height, bar_index) => (
-                                  <div
-                                    key={bar_index}
-                                    className="w-3 rounded-t-sm bg-gradient-to-t from-violet-600 to-fuchsia-400"
-                                    style={{ height }}
-                                  />
-                                ),
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
+                    <img
+                      src={previewImage(project.url)}
+                      alt={`${project.title} preview`}
+                      loading="lazy"
+                      className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.04]"
+                    />
                     <span className="absolute bottom-3 right-3 rounded-full border border-white/15 bg-[#0B0C15]/70 px-2.5 py-1 text-[9px] font-semibold uppercase tracking-widest text-white/70 backdrop-blur">
-                      Preview
+                      Visit
                     </span>
-                  </div>
+                  </a>
+
 
                   <div className="p-6">
                     <div className="mb-3 flex items-center gap-2">
-                      <span className={`h-1.5 w-1.5 rounded-full ${project.accent}`} />
+                      <span className={`h-1.5 w-1.5 rounded-full ${accents[index % accents.length]}`} />
                       <span className="text-[10px] font-semibold tracking-[0.18em] text-[#9E9EB5]">
                         {project.category}
                       </span>
