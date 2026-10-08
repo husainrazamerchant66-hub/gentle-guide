@@ -938,8 +938,7 @@ function Index() {
                         size={18}
                         className="mt-0.5 shrink-0"
                       />
-                      Your message was saved in this browser. Online
-                      delivery is not connected yet.
+                      Your request has been sent. I'll get back to you soon!
                     </div>
                   )}
 
