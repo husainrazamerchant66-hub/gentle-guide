@@ -1,7 +1,7 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useState, type FormEvent } from "react";
-import { Lock, LogOut, Mail, Pencil, Plus, Trash2, ExternalLink } from "lucide-react";
+import { Lock, LogOut, Mail, Phone, Pencil, Plus, Trash2, ExternalLink } from "lucide-react";
 import { deleteRow, getAdminData, lockAdmin, saveProject, unlockAdmin } from "@/lib/site.functions";
 import { previewImage } from "@/lib/preview";
 
@@ -134,6 +134,11 @@ function AdminPage() {
                     <a href={`mailto:${m.email}`} className="flex items-center gap-1 text-sm text-[#B9A7FF]">
                       <Mail size={13} /> {m.email}
                     </a>
+                    {m.phone && (
+                      <a href={`tel:${m.phone.replace(/\s/g, "")}`} className="flex items-center gap-1 text-sm text-[#B9A7FF]">
+                        <Phone size={13} /> {m.phone}
+                      </a>
+                    )}
                   </div>
                   <div className="text-right text-xs text-[#9999B0]">
                     <p>{m.project_type}</p>

@@ -50,6 +50,11 @@ export const listProjects = createServerFn({ method: "GET" }).handler(async () =
 const messageSchema = z.object({
   name: z.string().trim().min(1).max(100),
   email: z.string().trim().email().max(255),
+  phone: z
+    .string()
+    .trim()
+    .regex(/^\+[0-9\s()-]{3,24}$/, "Invalid phone number")
+    .optional(),
   project_type: z.string().trim().min(1).max(100),
   message: z.string().trim().min(1).max(2000),
 });
