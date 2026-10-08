@@ -18,7 +18,7 @@ export const Route = createFileRoute("/admin")({
     ],
   }),
   component: AdminPage,
-  errorComponent: ({ error }) => <div className="p-10 text-white">Error: {error.message}</div>,
+  errorComponent: ({ error }) => <div className="p-10 text-white">Error: {String((error as Error)?.message ?? error)}</div>,
 });
 
 type Project = {
