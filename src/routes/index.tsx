@@ -616,7 +616,7 @@ function Index() {
                 </h2>
                 <p className="mt-5 max-w-xl text-base leading-8 text-[#9999B0]">
                   A look at the kinds of digital products and experiences I
-                  build. Project previews are placeholders for actual work.
+                  build.
                 </p>
               </div>
               <a
@@ -654,7 +654,7 @@ function Index() {
 
                   <div className="p-6">
                     <div className="mb-3 flex items-center gap-2">
-                      <span className={`h-1.5 w-1.5 rounded-full ${project.accent}`} />
+                      <span className={`h-1.5 w-1.5 rounded-full ${accents[index % accents.length]}`} />
                       <span className="text-[10px] font-semibold tracking-[0.18em] text-[#9E9EB5]">
                         {project.category}
                       </span>
