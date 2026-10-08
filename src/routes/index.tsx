@@ -266,7 +266,7 @@ function Index() {
             aria-label={menu_open ? "Close menu" : "Open menu"}
             aria-expanded={menu_open}
             aria-controls="mobile-navigation"
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 text-white sm:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 text-white lg:hidden"
           >
             {menu_open ? <X size={20} /> : <Menu size={20} />}
           </button>
@@ -275,7 +275,7 @@ function Index() {
         {menu_open && (
           <div
             id="mobile-navigation"
-            className="border-t border-white/10 bg-[#101019] px-5 py-5 sm:hidden"
+            className="border-t border-white/10 bg-[#101019] px-5 py-5 lg:hidden"
           >
             <div className="flex flex-col gap-1">
               {navigation_items.map((item) => (
