@@ -21,6 +21,7 @@ export type Database = {
           id: string
           message: string
           name: string
+          phone: string | null
           project_type: string
         }
         Insert: {
@@ -29,6 +30,7 @@ export type Database = {
           id?: string
           message: string
           name: string
+          phone?: string | null
           project_type: string
         }
         Update: {
@@ -37,6 +39,7 @@ export type Database = {
           id?: string
           message?: string
           name?: string
+          phone?: string | null
           project_type?: string
         }
         Relationships: []
