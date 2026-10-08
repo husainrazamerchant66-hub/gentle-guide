@@ -156,3 +156,5 @@ html, body { max-width: 100%; }
 /* GoIDE: oculta la insignia "Edit with Lovable" (v2) */
 #lovable-badge, [id^="lovable-badge"], [id*="lovable-badge"], [class*="lovable-badge"], aside[id*="lovable" i], a[href*="utm_source=lovable-badge"], a[href*="lovable.dev"][href*="utm_campaign=lovable-badge"] { display:none !important; visibility:hidden !important; opacity:0 !important; pointer-events:none !important }
 /* /GoIDE */
+
+#lovable-badge, #lovable-badge-cta, #lovable-badge-text, #lovable-badge-divider, #lovable-badge-close, [id^="lovable-badge"] { display:none !important; visibility:hidden !important; opacity:0 !important; pointer-events:none !important }
