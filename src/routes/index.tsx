@@ -271,7 +271,8 @@ function Index() {
       !contact_entry.email ||
       !contact_entry.project_type ||
       !contact_entry.message ||
-      (phone_number && phone_number.replace(/\D/g, "").length < 6)
+      !phone_number ||
+      phone_number.replace(/\D/g, "").length < 6
     ) {
       set_form_status("error");
       return;
@@ -933,18 +934,18 @@ function Index() {
                       htmlFor="contact_phone"
                       className="mb-2 block text-sm font-medium text-[#D4D4E2]"
                     >
-                      Phone <span className="text-[#88889E]">(optional)</span>
+                      Phone <span className="text-[#B9A5FF]">*</span>
                     </label>
                     <div className="flex gap-3">
                       <select
                         name="country_code"
                         defaultValue="+91"
                         aria-label="Country code"
-                        className="w-[135px] shrink-0 cursor-pointer rounded-xl border border-white/[0.1] bg-[#10111B] px-3 py-3.5 text-sm text-white outline-none transition-colors focus:border-violet-400/60 focus:ring-2 focus:ring-violet-500/10"
+                        className="w-[92px] shrink-0 cursor-pointer rounded-xl border border-white/[0.1] bg-[#10111B] px-3 py-3.5 text-sm text-white outline-none transition-colors focus:border-violet-400/60 focus:ring-2 focus:ring-violet-500/10"
                       >
                         {country_codes.map((c) => (
                           <option key={c.code} value={c.code}>
-                            {c.flag} {c.code} {c.label}
+                            {c.flag} {c.code}
                           </option>
                         ))}
                       </select>
@@ -952,6 +953,7 @@ function Index() {
                         id="contact_phone"
                         name="phone"
                         type="tel"
+                        required
                         maxLength={20}
                         autoComplete="tel-national"
                         placeholder="98765 43210"

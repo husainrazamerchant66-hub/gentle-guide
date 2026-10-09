@@ -53,8 +53,7 @@ const messageSchema = z.object({
   phone: z
     .string()
     .trim()
-    .regex(/^\+[0-9\s()-]{3,24}$/, "Invalid phone number")
-    .nullish(),
+    .regex(/^\+[0-9\s()-]{3,24}$/, "Invalid phone number"),
   project_type: z.string().trim().min(1).max(100),
   message: z.string().trim().min(1).max(2000),
 });
