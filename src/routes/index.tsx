@@ -940,11 +940,11 @@ function Index() {
                         name="country_code"
                         defaultValue="+91"
                         aria-label="Country code"
-                        className="w-[135px] shrink-0 cursor-pointer rounded-xl border border-white/[0.1] bg-[#10111B] px-3 py-3.5 text-sm text-white outline-none transition-colors focus:border-violet-400/60 focus:ring-2 focus:ring-violet-500/10"
+                        className="w-[92px] shrink-0 cursor-pointer rounded-xl border border-white/[0.1] bg-[#10111B] px-3 py-3.5 text-sm text-white outline-none transition-colors focus:border-violet-400/60 focus:ring-2 focus:ring-violet-500/10"
                       >
                         {country_codes.map((c) => (
                           <option key={c.code} value={c.code}>
-                            {c.flag} {c.code} {c.label}
+                            {c.flag} {c.code}
                           </option>
                         ))}
                       </select>
