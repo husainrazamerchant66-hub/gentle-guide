@@ -261,7 +261,7 @@ function Index() {
     const contact_entry = {
       name: String(form_data.get("name") ?? "").trim(),
       email: String(form_data.get("email") ?? "").trim(),
-      phone: phone || undefined,
+      phone: phone || null,
       project_type: String(form_data.get("project_type") ?? "").trim(),
       message: String(form_data.get("message") ?? "").trim(),
     };
