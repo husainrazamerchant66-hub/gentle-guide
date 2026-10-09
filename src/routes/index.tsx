@@ -271,7 +271,8 @@ function Index() {
       !contact_entry.email ||
       !contact_entry.project_type ||
       !contact_entry.message ||
-      (phone_number && phone_number.replace(/\D/g, "").length < 6)
+      !phone_number ||
+      phone_number.replace(/\D/g, "").length < 6
     ) {
       set_form_status("error");
       return;
@@ -933,7 +934,7 @@ function Index() {
                       htmlFor="contact_phone"
                       className="mb-2 block text-sm font-medium text-[#D4D4E2]"
                     >
-                      Phone <span className="text-[#88889E]">(optional)</span>
+                      Phone <span className="text-[#B9A5FF]">*</span>
                     </label>
                     <div className="flex gap-3">
                       <select
@@ -952,6 +953,7 @@ function Index() {
                         id="contact_phone"
                         name="phone"
                         type="tel"
+                        required
                         maxLength={20}
                         autoComplete="tel-national"
                         placeholder="98765 43210"
