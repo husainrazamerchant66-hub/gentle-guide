@@ -62,7 +62,9 @@ const messageSchema = z.object({
 export const sendMessage = createServerFn({ method: "POST" })
   .inputValidator((d) => messageSchema.parse(d))
   .handler(async ({ data }) => {
-    const { error } = await publicClient().from("contact_messages").insert(data);
+    const { error } = await publicClient()
+      .from("contact_messages")
+      .insert({ ...data, phone: data.phone ?? null });
     if (error) {
       console.error(error);
       return { ok: false as const };
